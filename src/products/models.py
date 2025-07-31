@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.urls import reverse
 from cfehome.env import config
 import stripe
-from cfehome.storage import B2Storage
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default=None)
 stripe.api_key=STRIPE_SECRET_KEY
@@ -19,13 +18,8 @@ protected_storage = FileSystemStorage(location=str(PROTECTED_MEDIA_ROOT))
 class Product(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     stripe_product_id =models.CharField(max_length=120, blank=True, null=True) 
-    # image = models.ImageField(upload_to="products/", blank=True, null=True)
-    image =models.ImageField(
-        upload_to="products/",
-        storage=B2Storage(),
-        blank=True,
-        null=True
-    )# cloud storage
+    image = models.ImageField(upload_to="products/", blank=True, null=True)
+    
     name = models.CharField(max_length=120)
     handle = models.SlugField(unique=True) # slug
     price = models.DecimalField(max_digits=10, decimal_places=2, default=9.99)
@@ -36,19 +30,19 @@ class Product(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    def get_image_url(self):
-        if self.image:
-            return self.image.url
-        return None
+    # def get_image_url(self):    ---- for cloud
+    #     if self.image:
+    #         return self.image.url
+    #     return None
 
     @property
     def display_name(self):
         return self.name 
     
-    @property
-    def display_image(self):
-        """Property to access image URL"""
-        return self.get_image_url()
+    # @property       ---- for cloud
+    # def display_image(self):
+    #     """Property to access image URL"""
+    #     return self.get_image_url()
     
     @property
     def display_price(self):
