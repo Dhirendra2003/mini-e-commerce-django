@@ -127,6 +127,25 @@ MEDIA_ROOT=BASE_DIR.parent / "local-cdn" / "media"
 PROTECTED_MEDIA_ROOT=BASE_DIR.parent / "local-cdn" / "protected"
 MEDIA_URL = 'media/'
 
+
+# Cloud storage config
+B2_BUCKET_NAME = config('B2_BUCKET_NAME')
+B2_KEY_ID = config('B2_KEY_ID')
+B2_APP_KEY = config('B2_APP_KEY')
+B2_REGION = config('B2_REGION', default='eu-central-003')
+B2_ENDPOINT = f'https://s3.{B2_REGION}.backblazeb2.com'
+B2_DOWNLOAD_URL = f'https://{B2_REGION}.backblazeb2.com/file/{B2_BUCKET_NAME}'
+
+# Storage settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_ENDPOINT_URL = B2_ENDPOINT
+AWS_ACCESS_KEY_ID = B2_KEY_ID
+AWS_SECRET_ACCESS_KEY = B2_APP_KEY
+AWS_STORAGE_BUCKET_NAME = B2_BUCKET_NAME
+AWS_S3_REGION_NAME = B2_REGION
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = False
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
