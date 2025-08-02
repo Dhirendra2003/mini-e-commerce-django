@@ -1,0 +1,20 @@
+scripts:
+  server: cd src && python manage.py runserver
+  migrate: cd src && python manage.py migrate
+  freeze: python -m pip freeze > requirements.txt
+  watch: npx tailwindcss -i ./src/static/tailwind/tailwind-input.css -o ./src/static/css/output.css --watch
+  installs:
+    - pip-compile src/requirements/requirements.in -o src/requirements.txt
+    - python -m pip install -r src/requirements.txt
+    - npm install
+  vendor_pull:
+    - rmdir /S /Q src\static\vendor
+    - mkdir src\static\vendor\htmx
+    - mkdir src\static\vendor\flowbite
+    - curl -L https://unpkg.com/htmx.org@1.8.2 -o ./src/static/vendor/htmx/htmx.min.js
+    - copy .\node_modules\flowbite\dist\flowbite.min.js .\src\static\vendor\flowbite\flowbite.min.js
+
+build: docker build -f Dockerfile -t micro-ecommerce .
+
+docker_dev: docker run --env-file .env -p 8001:8000 --rm --name micro-ecommerce-dev -it micro-ecommerce
+docker_prod: docker run --env-file .env -p 8002:8000 --rm --name micro-ecommerce-prod -it micro-ecommerce

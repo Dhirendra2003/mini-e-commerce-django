@@ -24,9 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('DJANGO_SECRET_KEY',default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG =config('DJANGO_DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
+ALLOWED_HOST=config('ALLOWED_HOST', default='' ,cast=str)
+if ALLOWED_HOST:
+    ALLOWED_HOSTS.append(ALLOWED_HOST.strip())
 
 
 # Application definition
@@ -65,7 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cfehome.context_processors.vendor_files'
+                #'cfehome.context_processors.vendor_files'
             ],
         },
     },
