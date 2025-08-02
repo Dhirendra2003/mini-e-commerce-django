@@ -13,6 +13,9 @@ echo "Inside /app directory:"
 pwd
 ls -al
 
+# Collect static files
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
 APP_PORT=${PORT:-8000}
 cd /app/ 

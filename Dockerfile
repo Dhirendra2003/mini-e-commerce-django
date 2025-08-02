@@ -26,6 +26,8 @@ RUN apt-get remove -y --purge make gcc build-essential && \
 # set PATH to use venv by default
 ENV PATH="/opt/venv/bin:$PATH"
 
+
+
 # make entrypoint executable
 RUN chmod +x ./config/entrypoint.sh
 

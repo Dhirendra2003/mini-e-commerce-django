@@ -9,6 +9,7 @@ import stripe
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default=None)
 stripe.api_key=STRIPE_SECRET_KEY
+BASE_ENDPOINT= config("BASE_ENDPOINT", default="http://127.0.0.1:8000")
 
 def purchase_start_view(request):
   if not request.method == "POST":
@@ -22,13 +23,13 @@ def purchase_start_view(request):
     return HttpResponseBadRequest("Product does not have a valid price.")
   purchase=Purchase.objects.create(user=request.user, product=obj)
   request.session['purchase_id'] = purchase.id
-  success_path= reverse("purchases:success")
-  cancel_path= reverse("purchases:stopped")
-  base_endpoint="http://127.0.0.1:8000"
-  success_url=f"{base_endpoint}/{success_path}"
-  cancel_url=f"{base_endpoint}/{cancel_path}"
-  print(f"Success URL: {success_url}")
-  print(f"Cancel URL: {cancel_url}")
+  success_path = reverse("purchases:success")
+  if not success_path.startswith("/"):
+        success_path = f"/{success_path}"
+  cancel_path = reverse("purchases:stopped")
+  success_url = f"{BASE_ENDPOINT}{success_path}"
+  cancel_url = f"{BASE_ENDPOINT}{cancel_path}"
+  print(success_url, cancel_url)
   checkout_session=stripe.checkout.Session.create(
     line_items=[
       {
